@@ -36,7 +36,7 @@ export default function Home() {
   // 複製先の日付を配列に追加する処理
   const handleAddDate = () => {
     if (currentDateInput && !targetDates.includes(currentDateInput)) {
-      setTargetDates([...targetDates, currentDateInput].sort());
+      setTargetDates([...targetDates, currentDateInput].sort()); // 日付順になる
       setCurrentDateInput(""); // 入力欄をクリア
     }
   };

@@ -1,7 +1,13 @@
+// Google の access_token は短時間で期限切れになる。
+// 期限切れだと Google API が使えない。
+// 一方 refresh_token を使えばユーザーの再操作なしに新しい access_token を取得できる。
+
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
 import type { JWT } from "next-auth/jwt";
 
+// 期限切れの Google のアクセストークンをリフレッシュトークンで更新する関数。
+// トークン更新に失敗したらエラーフラグを付けたまま既存トークンを返す。
 async function refreshAccessToken(token: JWT): Promise<JWT> {
   if (!token.refreshToken) {
     return { ...token, error: "RefreshAccessTokenError" };
@@ -59,6 +65,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
     }),
   ],
+  //  JWT（セッショントークン）を作る／更新する処理。
+  //  Sign-in 時の初期保存と、既存トークンの有効期限チェック・リフレッシュを行う。
+  // セッション取得時にコールバックは呼ばれて、トークンが切れてたら更新する
   callbacks: {
     // Googleから返ってきたトークンを処理する関数
     async jwt({ token, account }) {
@@ -72,6 +81,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         return token;
       }
 
+      // トークンの期限がある　かつ　期限切れでない場合
       if (token.accessTokenExpires && Date.now() < token.accessTokenExpires) {
         return token;
       }

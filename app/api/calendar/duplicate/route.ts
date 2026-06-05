@@ -1,3 +1,7 @@
+// まとめ
+// クライアント側から送られてきた予定の日付だけ変えて、新しく予定を追加。
+// 複製したい数だけループ
+
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { google } from "googleapis";

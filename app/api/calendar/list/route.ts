@@ -16,8 +16,13 @@ export async function GET() {
       );
     }
 
+    // oauth2のクライアントを作成
     const oauth2Client = new google.auth.OAuth2();
+
+    // 認証情報をセットする
     oauth2Client.setCredentials({ access_token: accessToken });
+
+    // 認証情報をセットしたクライアントとバージョンの指定をしてカレンダークライアントを作成
     const calendar = google.calendar({ version: "v3", auth: oauth2Client });
 
     // 現在時刻から、直近10件の予定を取得する
