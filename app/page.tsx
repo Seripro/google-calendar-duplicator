@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
+import DatePicker from "react-multi-date-picker";
+import DateObject from "react-date-object";
 
 // Google Calendar のイベント型定義
 interface CalendarEvent {
@@ -17,9 +19,10 @@ export default function Home() {
   const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [selectedEventId, setSelectedEventId] = useState<string>("");
   const [targetDates, setTargetDates] = useState<string[]>([]);
-  const [currentDateInput, setCurrentDateInput] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
+
+  const [value, setValue] = useState<DateObject[]>([]);
 
   // ログイン成功時に直近の予定を取得
   useEffect(() => {
@@ -35,9 +38,9 @@ export default function Home() {
 
   // 複製先の日付を配列に追加する処理
   const handleAddDate = () => {
-    if (currentDateInput && !targetDates.includes(currentDateInput)) {
-      setTargetDates([...targetDates, currentDateInput].sort()); // 日付順になる
-      setCurrentDateInput(""); // 入力欄をクリア
+    if (value.length !== 0) {
+      const newDates = value.map((d) => `${d.year}-${d.month.number}-${d.day}`);
+      setTargetDates(newDates.sort()); // 日付順になる
     }
   };
 
@@ -70,6 +73,7 @@ export default function Home() {
       if (data.success) {
         setMessage(`成功！ ${data.events.length}個の予定を複製しました。`);
         setTargetDates([]); // 選択をクリア
+        setValue([]);
       } else {
         setMessage(`エラー: ${data.error}`);
       }
@@ -155,19 +159,9 @@ export default function Home() {
               <label className="block text-sm font-semibold text-gray-700 mb-2">
                 ② 複製先の日付を追加（複数可）
               </label>
-              <div className="flex gap-2 mb-3">
-                <input
-                  type="date"
-                  value={currentDateInput}
-                  onChange={(e) => setCurrentDateInput(e.target.value)}
-                  className="border rounded-lg p-2 text-gray-800 focus:ring-2 focus:ring-blue-500 flex-1"
-                />
-                <button
-                  onClick={handleAddDate}
-                  className="bg-gray-800 hover:bg-gray-950 text-white px-4 rounded-lg font-medium transition"
-                >
-                  追加
-                </button>
+              <div>
+                <DatePicker value={value} onChange={setValue} multiple={true} />
+                <button onClick={handleAddDate}>追加</button>
               </div>
 
               {/* 選択された日付のバッジリスト */}
