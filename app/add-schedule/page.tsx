@@ -73,51 +73,113 @@ function Page() {
     }
   };
   return (
-    <div>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <label htmlFor="title">タイトル: </label>
-        <input
-          type="text"
-          id="title"
-          {...register("summary", { required: false })}
-          placeholder="タイトルを入力してください"
-        />
-        <input type="submit" />
-        <label htmlFor="start-day">開始日: </label>
-        <input
-          type="text"
-          id="start-day"
-          {...register("startDay", { required: true })}
-          placeholder="2026-06-07"
-        />
-        <input type="submit" />
-        <label htmlFor="end-day">終了日: </label>
-        <input
-          type="text"
-          id="end-day"
-          {...register("endDay", { required: true })}
-          placeholder="2026-06-08"
-        />
-        <input type="submit" />
-        <label htmlFor="start-day-time">開始時間: </label>
-        <input
-          type="text"
-          id="start-day-time"
-          {...register("startDayTime", { required: false })}
-          placeholder="17:00"
-        />
-        <input type="submit" />
-        <label htmlFor="end-day-time">終了時間: </label>
-        <input
-          type="text"
-          id="end-day-time"
-          {...register("endDayTime", { required: false })}
-          placeholder="18:00"
-        />
-        <input type="submit" />
-      </form>
-      {error ? <div>{error}</div> : null}
-    </div>
+    <main className="flex min-h-screen flex-col items-center justify-start p-8 md:p-24 bg-gray-50">
+      <div className="w-full max-w-2xl bg-white p-8 rounded-xl shadow-md">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          <div>
+            <label
+              htmlFor="title"
+              className="block text-sm font-semibold text-gray-700 mb-2"
+            >
+              タイトル
+            </label>
+            <input
+              type="text"
+              id="title"
+              {...register("summary", { required: false })}
+              placeholder="タイトルを入力してください"
+              className="w-full border border-gray-300 rounded-lg p-2.5 text-gray-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label
+                htmlFor="start-day"
+                className="block text-sm font-semibold text-gray-700 mb-2"
+              >
+                開始日
+              </label>
+              <input
+                type="text"
+                id="start-day"
+                {...register("startDay", { required: true })}
+                placeholder="2026-06-07"
+                className="w-full border border-gray-300 rounded-lg p-2.5 text-gray-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="end-day"
+                className="block text-sm font-semibold text-gray-700 mb-2"
+              >
+                終了日
+              </label>
+              <input
+                type="text"
+                id="end-day"
+                {...register("endDay", { required: true })}
+                placeholder="2026-06-08"
+                className="w-full border border-gray-300 rounded-lg p-2.5 text-gray-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label
+                htmlFor="start-day-time"
+                className="block text-sm font-semibold text-gray-700 mb-2"
+              >
+                開始時間
+                <span className="ml-2 text-xs text-gray-400 font-normal">
+                  任意
+                </span>
+              </label>
+              <input
+                type="text"
+                id="start-day-time"
+                {...register("startDayTime", { required: false })}
+                placeholder="17:00"
+                className="w-full border border-gray-300 rounded-lg p-2.5 text-gray-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="end-day-time"
+                className="block text-sm font-semibold text-gray-700 mb-2"
+              >
+                終了時間
+                <span className="ml-2 text-xs text-gray-400 font-normal">
+                  任意
+                </span>
+              </label>
+              <input
+                type="text"
+                id="end-day-time"
+                {...register("endDayTime", { required: false })}
+                placeholder="18:00"
+                className="w-full border border-gray-300 rounded-lg p-2.5 text-gray-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+              />
+            </div>
+          </div>
+
+          <div className="pt-4 border-t">
+            <input
+              type="submit"
+              value="予定を登録する"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition shadow cursor-pointer"
+            />
+          </div>
+        </form>
+
+        {error && (
+          <div className="mt-4 p-4 rounded-lg text-center font-medium bg-red-50 text-red-700 border border-red-200">
+            {error}
+          </div>
+        )}
+      </div>
+    </main>
   );
 }
 
