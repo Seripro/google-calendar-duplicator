@@ -2,12 +2,22 @@
 
 import { formType } from "@/types/formType";
 import { newEventType } from "@/types/newEvent";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 function Page() {
+  const { status } = useSession();
+  const router = useRouter();
   const { register, handleSubmit } = useForm<formType>();
   const [error, setError] = useState<string>("");
+
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.replace("/");
+    }
+  }, [status, router]);
   const onSubmit: SubmitHandler<formType> = async (data) => {
     console.log(data);
     if (data.startDay > data.endDay) {
@@ -72,6 +82,15 @@ function Page() {
       console.log(e);
     }
   };
+
+  if (status === "loading" || status === "unauthenticated") {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        読み込み中...
+      </div>
+    );
+  }
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-start p-8 md:p-24 bg-gray-50">
       <div className="w-full max-w-2xl bg-white p-8 rounded-xl shadow-md">

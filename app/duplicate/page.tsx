@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import DatePicker from "react-multi-date-picker";
 import DateObject from "react-date-object";
 
@@ -13,6 +14,7 @@ interface CalendarEvent {
 
 export default function DuplicatePage() {
   const { data: session, status } = useSession();
+  const router = useRouter();
 
   const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [selectedEventId, setSelectedEventId] = useState<string>("");
@@ -21,6 +23,12 @@ export default function DuplicatePage() {
   const [message, setMessage] = useState<string>("");
 
   const [value, setValue] = useState<DateObject[]>([]);
+
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.replace("/");
+    }
+  }, [status, router]);
 
   useEffect(() => {
     if (status === "authenticated") {
@@ -78,18 +86,10 @@ export default function DuplicatePage() {
     }
   };
 
-  if (status === "loading") {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        読み込み中...
-      </div>
-    );
-  }
-
   if (!session) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <p className="text-gray-600">ログインしてください。</p>
+        読み込み中...
       </div>
     );
   }
